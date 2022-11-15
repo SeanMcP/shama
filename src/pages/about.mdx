@@ -1,0 +1,32 @@
+---
+layout: "../components/Layout.astro"
+title: About
+---
+
+import { commonWords } from "../utils";
+
+# About
+
+When reading the Bible with my family, I like to pick out a word that my young son should listen for. I want it to be relevant to the passage and common enough to keep him engaged throughout the reading.
+
+While it is sometimes easy to scan a chapter and pick a suitable word, often times it is not. This website makes it easier to find the right word for each chapter of the Bible.
+
+## Shama?
+
+The word "shama" is an English transliteration of the Hebrew word for "hear" or "listen." It is the word that God uses to call his people to listen to him in the lines of Deuteronomy 6:4:
+
+> Hear, Israel: Yahweh is our God. Yahweh is one. (WEBP)
+
+## What translation is this?
+
+This project used the [World English Bible (WEBP)](https://ebible.org/bible/details.php?id=engwebp) by eBible.org, which is graciously provided in the public domain.
+
+## Are any words excluded?
+
+Yes, the following common English words are omitted: {new Intl.ListFormat('en', {style:'long', type: 'conjunction'}).format(commonWords)}.
+
+Additionally, all words that only occur once in the chapter are omitted. For an unabridged list of words, [view the underlying data on GitHub](https://github.com/seanmcp/shama/blob/master/data/).
+
+## Colophon
+
+This website was made by [Sean McPherson](https://seanmcp.com), built with [Astro](https://astro.build/), and is hosted on [Netlify](https://www.netlify.com/). The icons are from [HeroIcons](https://heroicons.com/).

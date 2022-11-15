@@ -1,0 +1,65 @@
+---
+import books from "../../data/books.json";
+import Layout from "../components/Layout.astro";
+import { toSlug } from "../utils";
+
+const ot = [];
+const nt = [];
+
+for (let i = 0; i < books.length; i++) {
+  const book = books[i];
+  if (i < 39) {
+    ot.push(book);
+  } else {
+    nt.push(book);
+  }
+}
+---
+
+<Layout>
+  <h1>Shama</h1>
+  <p>
+    Identify the most common word in every chapter of the Bible for better
+    listening.
+  </p>
+  <h2>Books</h2>
+  <div>
+    <section>
+      <h3 id="ot">Old Testament</h3>
+      <nav aria-labelledby="ot">
+        {ot.map((book) => <a href={toSlug(book)}>{book}</a>)}
+      </nav>
+    </section>
+    <section>
+      <h3 id="nt">New Testament</h3>
+      <nav aria-labelledby="nt">
+        {nt.map((book) => <a href={toSlug(book)}>{book}</a>)}
+      </nav>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  p {
+    text-align: center;
+  }
+
+  nav {
+    display: grid;
+  }
+
+  div {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media screen and (min-width: 380px) {
+    div {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  section h3 {
+    margin-top: 0;
+  }
+</style>

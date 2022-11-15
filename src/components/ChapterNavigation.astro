@@ -1,0 +1,34 @@
+---
+import chapters from "../../data/chapters.json";
+import { toSlug } from "../utils";
+
+export interface Props {
+  book: keyof typeof chapters;
+}
+
+const { book } = Astro.props;
+
+const chapterCount = chapters[book];
+
+const chapterList = Array.from({ length: chapterCount }, (_, i) => i + 1);
+---
+
+<nav>
+  {
+    chapterList.map((chapter) => (
+      <a
+        aria-label={`Chapter ${chapter}`}
+        href={`/${toSlug(book, true)}/${chapter}`}
+      >
+        {chapter}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import books from "../../data/books.json";
+import chapters from "../../data/chapters.json";
+import Layout from "../components/Layout.astro";
+import { toSlug } from "../utils";
+
+export async function getStaticPaths() {
+  return books.map((book) => ({
+    params: {
+      book: toSlug(book),
+    },
+    props: {
+      book,
+    },
+  }));
+}
+const { book } = Astro.props;
+const chapterCount = chapters[book as keyof typeof chapters];
+
+const chapterList = Array.from({ length: chapterCount }, (_, i) => i + 1);
+---
+
+<Layout title={book}>
+  <h1>{book}</h1>
+  <nav>
+    {
+      chapterList.map((chapter) => (
+        <a aria-label={`Chapter ${chapter}`} href={`/${toSlug(book, true)}/${chapter}`}>{chapter}</a>
+      ))
+    }
+  </nav>
+</Layout>
+
+<style>
+  nav {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+  }
+
+  nav a {
+    padding: 0.5rem;
+  }
+
+  @media screen and (min-width: 600px) {
+    nav {
+      grid-template-columns: repeat(10, 1fr);
+    }
+  }
+</style>

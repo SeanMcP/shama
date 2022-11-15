@@ -1,0 +1,110 @@
+---
+// @ts-ignore
+import fs from "fs";
+import Layout from "../../components/Layout.astro";
+import chapters from "../../../data/chapters.json";
+import { isCommon, toSlug } from "../../utils";
+
+export async function getStaticPaths() {
+  const paths = [];
+  // iterate over chapters object
+  for (const [book, count] of Object.entries(chapters)) {
+    for (let chapter = 1; chapter <= count; chapter++) {
+      paths.push({
+        params: {
+          book: toSlug(book, true),
+          chapter,
+        },
+        props: {
+          book,
+          chapter,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { book, chapter } = Astro.props;
+
+const data = JSON.parse(fs.readFileSync(`./data/books/${book}.json`, "utf8"))[
+  chapter - 1
+] as Array<[string, number, number, number]>;
+const title = `${book === "Psalms" ? "Psalm" : book} ${chapter}`;
+---
+
+<Layout
+  title={title}
+  book={book}
+  chapter={chapter}
+  description={`A list of the most common words in the book of ${book} from the Bible`}
+>
+  <h1>{title}</h1>
+  <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th>Count</th>
+          <th>Distribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          data.map((row) => {
+            const [word, count, _, distribution] = row;
+            if (isCommon(word) || count === 1) return null;
+            return (
+              // For sorting later, maybe
+              <tr data-data={JSON.stringify(row)}>
+                <td>
+                  {word === "Yahweh" ? (
+                    <Fragment>
+                      <span style={{ fontVariant: "small-caps" }}>Lord</span>
+                      /Yahweh
+                    </Fragment>
+                  ) : (
+                    word
+                  )}
+                </td>
+                <td>{count}</td>
+                <td>{distribution.toFixed(5)}</td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</Layout>
+
+<style>
+  table {
+    border-collapse: collapse;
+    overflow-x: auto;
+    width: 100%;
+  }
+  :where(td, th):nth-child(1) {
+    text-align: left;
+    width: 50%;
+  }
+  td:nth-child(n + 2) {
+    text-align: center;
+  }
+  div {
+    overflow-x: auto;
+  }
+  th,
+  td {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+    padding: 0.5rem;
+  }
+  tbody tr:nth-child(even) {
+    background-color: hsl(var(--h), 25%, 96%);
+  }
+  thead tr {
+    background-color: hsl(var(--h), 25%, 90%);
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import chapters from "../../data/chapters.json";
+import HomeIcon from "./HomeIcon.astro";
+import { toSlug } from "../utils";
+import BackIcon from "./BackIcon.astro";
+import NextIcon from "./NextIcon.astro";
+import BookIcon from "./BookIcon.astro";
+import InfoIcon from "./InfoIcon.astro";
+
+export interface Props {
+  book?: keyof typeof chapters;
+  chapter?: number;
+}
+
+const { book, chapter } = Astro.props;
+const chapterCount = book ? chapters[book] : 0;
+function shouldRenderChapterLinks() {
+  return book && chapter;
+}
+---
+
+<footer>
+  <nav aria-label="Site navigation">
+    <a aria-label="Home" href="/">
+      <HomeIcon />
+      {!shouldRenderChapterLinks() && <span>Shama</span>}
+    </a>
+    {
+      shouldRenderChapterLinks() ? (
+        <Fragment>
+          <a aria-label={book} href={`/${toSlug(book)}`}>
+            <BookIcon />
+          </a>
+          <a
+            aria-label="Previous chapter"
+            aria-disabled={chapter === 1}
+            href={`/${toSlug(book, true)}/${chapter - 1}`}
+          >
+            <BackIcon />
+          </a>
+          <a
+            aria-disabled={chapter === chapterCount}
+            aria-label="Next chapter"
+            href={`/${toSlug(book, true)}/${chapter + 1}`}
+          >
+            <NextIcon />
+          </a>
+        </Fragment>
+      ) : (
+        <a aria-label="About" href="/about">
+          <InfoIcon />
+        </a>
+      )
+    }
+  </nav>
+</footer>
+
+<style>
+  :global(body) {
+    padding-bottom: calc(32px + 1rem);
+  }
+
+  :global(nav svg) {
+    height: 32px;
+    width: 32px;
+  }
+
+  footer {
+    background: white;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    margin-inline: auto;
+    width: min(100%, 800px);
+  }
+
+  a {
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  a[aria-disabled="true"] {
+    pointer-events: none;
+    color: initial;
+    opacity: 0.5;
+  }
+
+  a span {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+</style>
