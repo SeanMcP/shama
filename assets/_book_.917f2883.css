@@ -1,0 +1,1 @@
+nav:where(.astro-GV3IPEHY){display:grid;gap:.5rem;grid-template-columns:repeat(5,1fr);text-align:center}nav:where(.astro-GV3IPEHY) a:where(.astro-GV3IPEHY){padding:.5rem}@media screen and (min-width: 600px){nav:where(.astro-GV3IPEHY){grid-template-columns:repeat(10,1fr)}}
